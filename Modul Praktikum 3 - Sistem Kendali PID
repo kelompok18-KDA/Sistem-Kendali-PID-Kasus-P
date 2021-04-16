@@ -1,5 +1,5 @@
 //Modul Praktikum 3 - Sistem Kendali PID
-//Nama Tim : SoloRank
+//Nama Tim : KDA
 //Nama Anggota 1 : ahmad fiqi haikal
 //Versi Program : 1.0
 
@@ -30,7 +30,7 @@ int x;
 //Error Code
 int Last_Error = 0;
 int error = 0;
-int mtrSPDright, mtrSPDleft, setPointSPD = 255, PID_movement; 
+int mtrSPDright, mtrSPDleft, setPointSPD = 150, PID_movement; 
 
 void setup(){
   pinMode(sensor1, INPUT);
@@ -57,14 +57,15 @@ void readsensor() {
   baca_sensor[3] = analogRead(sensor4);
   baca_sensor[4] = analogRead(sensor5);
   baca_sensor[5] = analogRead(sensor6);
-    
+/*    
   for (x = 0; x <= 5; x++){
     Serial.println (baca_sensor[x]);
   }  
+*/
 }
 
 void If_Error(){
-//just sensor 1 thats on 
+//sensor 1 nyala
 if (baca_sensor[0] < 34 && baca_sensor[1] > 34 && 
     baca_sensor[2] > 34 && baca_sensor[3] > 34 && 
     baca_sensor[4] > 34 && baca_sensor[5] > 34){  
@@ -73,7 +74,7 @@ if (baca_sensor[0] < 34 && baca_sensor[1] > 34 &&
     try_PID(Last_Error);
    }
 
-//just Sensor 2 thats on
+//sensor 2 nyala
 if (baca_sensor[0] > 34 && baca_sensor[1] < 34 && 
     baca_sensor[2] > 34 && baca_sensor[3] > 34 && 
     baca_sensor[4] > 34 && baca_sensor[5] > 34){
@@ -81,7 +82,7 @@ if (baca_sensor[0] > 34 && baca_sensor[1] < 34 &&
   try_PID(Last_Error);
    }
 
-//just sensor 3 thats on 
+//sensor 3 nyala
 if (baca_sensor[0] > 34 && baca_sensor[1] > 34 && 
     baca_sensor[2] < 34 && baca_sensor[3] > 34 && 
     baca_sensor[4] > 34 && baca_sensor[5] > 34){
@@ -97,7 +98,7 @@ if (baca_sensor[0] > 34 && baca_sensor[1] > 34 &&
   analogWrite(motor_kanan2, 0);
    }
 
-//just sensor 4 thats on
+//sensor 4 nyala
 if (baca_sensor[0] > 34 && baca_sensor[1] > 34 && 
     baca_sensor[2] > 34 && baca_sensor[3] < 34 && 
     baca_sensor[4] > 34 && baca_sensor[5] > 34){
@@ -106,7 +107,7 @@ if (baca_sensor[0] > 34 && baca_sensor[1] > 34 &&
   try_PID(Last_Error);
    }
 
-//just sensor 5 thats on
+//sensor 5 nyala
 if (baca_sensor[0] > 34 && baca_sensor[1] > 34 && 
     baca_sensor[2] > 34 && baca_sensor[3] > 34 && 
     baca_sensor[4] < 34 && baca_sensor[5] > 34){
@@ -115,7 +116,7 @@ if (baca_sensor[0] > 34 && baca_sensor[1] > 34 &&
   try_PID(Last_Error);
    }  
 
-//just sensor 6 thats on
+//sensor 6 nyala
 if (baca_sensor[0] > 34 && baca_sensor[1] > 34 && 
     baca_sensor[2] > 34 && baca_sensor[3] > 34 && 
     baca_sensor[4] > 34 && baca_sensor[5] < 34){
@@ -192,33 +193,37 @@ void loop(){
 }
 
 void try_PID(int Last_Error){
-  Serial.print ("Error Sensor Detect : ");
-  Serial.print (Last_Error);
-  Serial.print ("\n");
-  
-  int kp = 30, ki = 0, kd = 0;
+
+  //Serial.print ("Error Sensor Detect : ");
+  //Serial.println (Last_Error);
+  //Serial.print ("\n");
+
+  int kp = 1, ki = 0, kd = 0; // kp range = 1 - 5
   int rate = error - Last_Error; // 0 - (-2) = 2
-  PID_movement = (kp*Last_Error) + (kd*rate) + (ki/rate);
+  PID_movement = (kp*Last_Error) + (kd*rate) + (ki/rate); // 
   mtrSPDright = setPointSPD + PID_movement; // 255 - 60 = 195
   mtrSPDleft = setPointSPD - PID_movement; // 255 + 60 = 60
 
-  Serial.print ("error : ");
-  Serial.print (error);
-  Serial.print ("\n");
-  Serial.print ("rate : ");
-  Serial.print (rate);
-  Serial.print ("\n");
-  Serial.print ("PID : ");
-  Serial.print (PID_movement);
-  Serial.print ("\n");
-  Serial.print ("Motor Kanan : ");
-  Serial.print (mtrSPDright);
-  Serial.print ("\n");
-  Serial.print ("Motor Kiri : ");
-  Serial.print (mtrSPDleft);
-  Serial.print ("\n");
-  delay (1000);
+  //Serial.println (mtrSPDright);
   
+
+  //Serial.print ("error : ");
+  //Serial.print (error);
+  //Serial.print ("\n");
+  //Serial.print ("rate : ");
+  //Serial.print (rate);
+  //Serial.print ("\n");
+  //Serial.print ("PID : ");
+  //Serial.print (PID_movement);
+  //Serial.print ("\n");
+  //Serial.print ("Motor Kanan : ");
+  Serial.println (mtrSPDright);
+  //Serial.print ("\n");
+  //Serial.print ("Motor Kiri : ");
+  //Serial.println (mtrSPDleft);
+  //Serial.print ("\n");
+  //delay (1000);
+ 
   digitalWrite(pinEnable, HIGH);
   analogWrite(motor_kiri1, mtrSPDleft);
   analogWrite(motor_kiri2, 0);
